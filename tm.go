@@ -1,12 +1,12 @@
-package main
+// package main
 
-import (
-	"fmt"
+// import (
+// 	"fmt"
 
-	"github.com/yusong-offx/myshoppingmall/testfolder"
-)
+// 	"github.com/yusong-offx/myshoppingmall/testfolder"
+// )
 
-func main() {
-	fmt.Println(testfolder.P())
+// func main() {
+// 	fmt.Println(testfolder.P())
 
-}
+// }

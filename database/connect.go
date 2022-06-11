@@ -1,9 +1,8 @@
-package db
+package database
 
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -16,15 +15,15 @@ const (
 	dbname   = "shoppingmall"
 )
 
-func Connect() *sql.DB {
+func Connect() (*sql.DB, error) {
 	db, err := sql.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			host, port, user, password, dbname))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if err = db.Ping(); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	return db
+	return db, nil
 }

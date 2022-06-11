@@ -1008,13 +1008,10 @@ insert into MOCK_DATA (id, first_name, last_name, email, gender, ip_address) val
 
 func Test_p(t *testing.T) {
 	answers := strings.Split(answer, "\n")
-	result := p()
+	result := P()
 	for i := 0; i < len(answers); i++ {
 		if strings.Compare(result[i], answers[i]) != 0 {
 			t.Errorf("Diff")
 		}
 	}
-	// if reflect.DeepEqual(result, answers) {
-	// 	t.Errorf("Diff")
-	// }
 }
