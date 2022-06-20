@@ -1,13 +1,12 @@
 package info
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/yusong-offx/myshoppingmall/database"
 )
 
 // Database data form
+// @Discription Info struct
 type Info struct {
 	Id         int    `json:"id"`
 	First_name string `json:"first_name"`
@@ -17,14 +16,14 @@ type Info struct {
 	Ip_address string `json:"ip_address"`
 }
 
-func Info_Get(c *fiber.Ctx) error {
-	// Connect database
-	db, err := database.Connect()
-	if err != nil {
-		return c.Status(500).SendString(err.Error())
-	}
-	defer db.Close()
-
+// ListAccounts godoc
+// @Summary      List accounts
+// @Description  get accounts
+// @Tags         Users
+// @Produce      json
+// @Router       /info [get]
+func Get(c *fiber.Ctx) error {
+	db := database.DB
 	// Command sql
 	rows, err := db.Query("SELECT * FROM mock_data")
 	if err != nil {
@@ -49,18 +48,20 @@ func Info_Get(c *fiber.Ctx) error {
 	return c.JSON(getData)
 }
 
-func Info_Post(c *fiber.Ctx) error {
-	// connect database
-	db, err := database.Connect()
-	if err != nil {
-		return c.Status(500).SendString(err.Error())
-	}
-	defer db.Close()
+// ListAccounts godoc
+// @Summary      post accounts
+// @Description  post accounts
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param Data body Info true "good"
+// @Router       /info [post]
+func Post(c *fiber.Ctx) error {
+	db := database.DB
 
 	// Body parse into struct
 	data := &Info{}
-	if err = c.BodyParser(data); err != nil {
-		log.Println(err.Error())
+	if err := c.BodyParser(data); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
 
@@ -77,7 +78,26 @@ func Info_Post(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).SendString(err.Error())
 	}
-	log.Println(res)
+	defer res.Close()
 
-	return c.JSON(data)
+	return c.Status(201).JSON(data)
+}
+
+func Delete(c *fiber.Ctx) error {
+	db := database.DB
+
+	// Body parse into struct
+	data := &Info{}
+	if err := c.BodyParser(data); err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	// Command sql
+	res, err := db.Query("DELETE FROM mock_data Where id = $1", data.Id)
+	if err != nil {
+		return c.Status(500).SendString(err.Error())
+	}
+	defer res.Close()
+
+	return c.JSON("Deleted")
 }

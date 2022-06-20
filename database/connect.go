@@ -7,6 +7,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var DB *sql.DB
+
 const (
 	host     = "172.30.1.25"
 	port     = "5432"
@@ -15,15 +17,16 @@ const (
 	dbname   = "shoppingmall"
 )
 
-func Connect() (*sql.DB, error) {
-	db, err := sql.Open("postgres",
+func Connect() error {
+	var err error
+	DB, err = sql.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			host, port, user, password, dbname))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if err = db.Ping(); err != nil {
-		return nil, err
+	if err = DB.Ping(); err != nil {
+		return err
 	}
-	return db, nil
+	return nil
 }
