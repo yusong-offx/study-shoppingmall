@@ -6,11 +6,14 @@ import (
 	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/csrf"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/yusong-offx/myshoppingmall/database"
 	_ "github.com/yusong-offx/myshoppingmall/docs"
+
 	"github.com/yusong-offx/myshoppingmall/route/info"
-	"github.com/yusong-offx/myshoppingmall/route/login"
-	"github.com/yusong-offx/myshoppingmall/route/signup"
+	"github.com/yusong-offx/myshoppingmall/route/product"
+	"github.com/yusong-offx/myshoppingmall/route/user"
 )
 
 // @title Fiber Example API
@@ -24,10 +27,8 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	// Fiber start
 	app := fiber.New()
-
-	// Allow CORS
-	app.Use(cors.New())
 
 	// Database connect
 	err := database.Connect()
@@ -36,13 +37,24 @@ func main() {
 	}
 	defer database.DB.Close()
 
+	// Middleware
+	app.Use(cors.New())
+	app.Use(csrf.New())
+	app.Use(recover.New())
+
 	// Swagger
 	app.Get("/swagger/*", swagger.HandlerDefault)
-	app.Post("/test", info.Test)
+	app.Get("/test", info.Test)
+	app.Get("/test1", info.Test1)
 
-	// Path
-	app.Post("/login", login.Post)
-	app.Post("/signup", signup.Post)
+	// Package
+	// User
+	app.Post("/login", user.LoginPost)
+	app.Post("/signup", user.SignUpPost)
+	app.Get("/:id", user.UserGet)
+
+	// Product
+	app.Get("/product/:name/:stock", product.ItemGet)
 
 	// Open server
 	log.Fatal(app.Listen("localhost:8080"))
