@@ -1,0 +1,101 @@
+basePath: /
+definitions:
+  user.User:
+    properties:
+      addr:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  user.loginInfo:
+    properties:
+      id:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fiber Example API
+  version: "1.0"
+paths:
+  /{id}:
+    get:
+      description: Get User Info from DB
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      summary: Get User Info
+      tags:
+      - User
+  /login:
+    post:
+      description: check ID and Password
+      parameters:
+      - description: annoying
+        in: body
+        name: login_info
+        required: true
+        schema:
+          $ref: '#/definitions/user.loginInfo'
+      responses: {}
+      summary: Login
+      tags:
+      - User
+  /product/{name}/{stock}:
+    get:
+      parameters:
+      - description: product name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: product stock
+        in: path
+        name: stock
+        required: true
+        type: string
+      responses: {}
+      summary: Get Items Info
+      tags:
+      - Product
+  /signup:
+    post:
+      description: Post user info for sign up into DB
+      parameters:
+      - description: User infomation
+        in: body
+        name: Info
+        required: true
+        schema:
+          $ref: '#/definitions/user.User'
+      responses: {}
+      summary: Sign up
+      tags:
+      - User
+  /test:
+    get:
+      description: Test get list
+      responses: {}
+      summary: Test List
+      tags:
+      - Test
+swagger: "2.0"
