@@ -24,27 +24,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/login": {
-            "post": {
-                "description": "check ID and Password",
-                "tags": [
-                    "User"
-                ],
-                "summary": "Login",
-                "parameters": [
-                    {
-                        "description": "annoying",
-                        "name": "login_info",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/user.loginInfo"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/product/{name}/{stock}": {
             "get": {
                 "tags": [
@@ -70,28 +49,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/signup": {
-            "post": {
-                "description": "Post user info for sign up into DB",
+        "/test": {
+            "get": {
+                "description": "Test get list",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
-                    "User"
+                    "Test"
                 ],
-                "summary": "Sign up",
-                "parameters": [
-                    {
-                        "description": "User infomation",
-                        "name": "Info",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/user.User"
-                        }
-                    }
-                ],
+                "summary": "Test List",
                 "responses": {}
             }
         },
-        "/test": {
+        "/test1": {
             "get": {
                 "description": "Test get list",
                 "tags": [
@@ -101,8 +72,13 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/{id}": {
+        "/user/info/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get User Info from DB",
                 "tags": [
                     "User"
@@ -115,6 +91,97 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "Check ID and Password\nPassword secure by bcrypt",
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "ID and Password",
+                        "name": "ID\u0026PWD",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/utils.LoginInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/signup": {
+            "post": {
+                "description": "Post user info for sign up into DB",
+                "tags": [
+                    "User"
+                ],
+                "summary": "Sign up",
+                "parameters": [
+                    {
+                        "description": "User infomation",
+                        "name": "INFO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.User"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/vender/login": {
+            "post": {
+                "description": "Check ID and Password\nPassword secure by bcrypt",
+                "tags": [
+                    "Vender"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "ID and Password",
+                        "name": "ID\u0026PWD",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/utils.LoginInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/vender/signup": {
+            "post": {
+                "description": "vender sign up",
+                "tags": [
+                    "Vender"
+                ],
+                "summary": "vender sign up",
+                "parameters": [
+                    {
+                        "description": "vender info",
+                        "name": "INFO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vender.Vender"
+                        }
                     }
                 ],
                 "responses": {}
@@ -142,7 +209,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user.loginInfo": {
+        "utils.LoginInfo": {
             "type": "object",
             "properties": {
                 "id": {
@@ -152,6 +219,40 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "vender.Vender": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "OAuth protects our entity endpoints",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -13,11 +13,28 @@ definitions:
       phone_number:
         type: string
     type: object
-  user.loginInfo:
+  utils.LoginInfo:
     properties:
       id:
         type: string
       password:
+        type: string
+    type: object
+  vender.Vender:
+    properties:
+      addr:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      url:
         type: string
     type: object
 host: localhost:8080
@@ -33,33 +50,6 @@ info:
   title: Fiber Example API
   version: "1.0"
 paths:
-  /{id}:
-    get:
-      description: Get User Info from DB
-      parameters:
-      - description: User id
-        in: path
-        name: id
-        required: true
-        type: string
-      responses: {}
-      summary: Get User Info
-      tags:
-      - User
-  /login:
-    post:
-      description: check ID and Password
-      parameters:
-      - description: annoying
-        in: body
-        name: login_info
-        required: true
-        schema:
-          $ref: '#/definitions/user.loginInfo'
-      responses: {}
-      summary: Login
-      tags:
-      - User
   /product/{name}/{stock}:
     get:
       parameters:
@@ -77,13 +67,65 @@ paths:
       summary: Get Items Info
       tags:
       - Product
-  /signup:
+  /test:
+    get:
+      description: Test get list
+      produces:
+      - application/json
+      responses: {}
+      summary: Test List
+      tags:
+      - Test
+  /test1:
+    get:
+      description: Test get list
+      responses: {}
+      summary: Test List
+      tags:
+      - Test
+  /user/info/{id}:
+    get:
+      description: Get User Info from DB
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get User Info
+      tags:
+      - User
+  /user/login:
+    post:
+      description: |-
+        Check ID and Password
+        Password secure by bcrypt
+      parameters:
+      - description: ID and Password
+        in: body
+        name: ID&PWD
+        required: true
+        schema:
+          $ref: '#/definitions/utils.LoginInfo'
+      responses: {}
+      summary: Login
+      tags:
+      - User
+  /user/signup:
     post:
       description: Post user info for sign up into DB
       parameters:
       - description: User infomation
         in: body
-        name: Info
+        name: INFO
         required: true
         schema:
           $ref: '#/definitions/user.User'
@@ -91,11 +133,40 @@ paths:
       summary: Sign up
       tags:
       - User
-  /test:
-    get:
-      description: Test get list
+  /vender/login:
+    post:
+      description: |-
+        Check ID and Password
+        Password secure by bcrypt
+      parameters:
+      - description: ID and Password
+        in: body
+        name: ID&PWD
+        required: true
+        schema:
+          $ref: '#/definitions/utils.LoginInfo'
       responses: {}
-      summary: Test List
+      summary: Login
       tags:
-      - Test
+      - Vender
+  /vender/signup:
+    post:
+      description: vender sign up
+      parameters:
+      - description: vender info
+        in: body
+        name: INFO
+        required: true
+        schema:
+          $ref: '#/definitions/vender.Vender'
+      responses: {}
+      summary: vender sign up
+      tags:
+      - Vender
+securityDefinitions:
+  ApiKeyAuth:
+    description: OAuth protects our entity endpoints
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
