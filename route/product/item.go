@@ -2,8 +2,10 @@ package product
 
 import (
 	"github.com/gofiber/fiber/v2"
-	// . "github.com/yusong-offx/myshoppingmall/database"
+	"github.com/yusong-offx/myshoppingmall/utils"
 )
+
+// . "github.com/yusong-offx/myshoppingmall/database"
 
 type Item struct {
 	Id       int    `json:"id"`
@@ -21,16 +23,35 @@ type Item struct {
 // @Param		name path string true "product name"
 // @Param		stock path string true "product stock"
 // @Router		/product/{name}/{stock} [get]
-func ItemGet(c *fiber.Ctx) error {
-	a := c.Params("name")
-	b := c.Params("stock")
-	return c.SendString(a + b + "Good")
+func ItemPost(c *fiber.Ctx) error {
+	// Body parse(json)
+	item := Item{}
+	err := c.BodyParser(&item)
+	if err != nil {
+		return utils.ErrorReqeustJSON(err, 500, c)
+	}
+	rows, err := utils.DB.Query(
+		"INSERT INTO name, stock, price, content, photo, vender, category VALUES ($1, $2, $3, $4, $5, $6, $7)",
+		item.Name, item.Stock, item.Price, item.Content, item.Photo, item.Vender, item.Category)
+	if err != nil {
+		return utils.ErrorReqeustJSON(err, 500, c)
+	}
+	defer rows.Close()
+
+	return c.Status(fiber.StatusCreated).JSON(utils.RequestJSON{
+		Success: true,
+		Msg:     "created",
+	})
 }
 
-// func ItemPost(c *fiber.Ctx) error {
-// 	// Parse body json
-// 	itemInfo := Item{}
-// 	err := c.BodyParser(&itemInfo)
+// @Tags		Product
+// @Summary		Get Items Info
+// @Param		name path string true "product name"
+// @Param		stock path string true "product stock"
+// @Router		/product/item/add [post]
+func ItemGet(c *fiber.Ctx) error {
+	// Parse body json
+	item := Item{}
 
-// 	rows, err := DB.Query("INSERT INTO items () VALUES ()")
-// }
+	rows, err := utils.DB.Query("INSERT ")
+}

@@ -25,9 +25,9 @@ type UserInfo struct {
 // @Summary 	Get User Info
 // @Description	Get User Info from DB
 // @Param		id path string true "User id"
+// @Router		/user/{id}/info [get]
 // @Security	ApiKeyAuth
-// @param		Authorization header string true "Authorization"
-// @Router		/user/info/{id} [get]
+// @Param		Authorization header string true "Authorization"
 func UserGet(c *fiber.Ctx) error {
 	// Get data from DB
 	rows, err := utils.DB.Query("SELECT id, addr, phone_number, email FROM users WHERE id = $1", c.Params("id"))
@@ -78,7 +78,11 @@ func UserSignUp(c *fiber.Ctx) error {
 	rows, err := utils.DB.Query(
 		"INSERT INTO users VALUES ($1, $2, $3, $4, $5)",
 		user.Id, pwdHash, user.Addr, user.Phone_number, user.Email)
-	return utils.DBPost(rows, err, c)
+	return utils.DBPost(utils.SqlFuncArgs{
+		Rows: rows,
+		Err:  err,
+		Ctx:  c,
+	})
 }
 
 // @Tags         User
@@ -89,4 +93,13 @@ func UserSignUp(c *fiber.Ctx) error {
 // @Router       /user/login [post]
 func UserLogin(c *fiber.Ctx) error {
 	return utils.Login("users", c)
+}
+
+func UserDelete(c *fiber.Ctx) error {
+	if err := utils.DBDelete(utils.SqlFuncArgs{
+		Args: []string{"users", "id", c.Params("id")},
+	}); err != nil {
+		return utils.ErrorReqeustJSON(err, 500, c)
+	}
+	return c.Status(fiber.StatusOK).Redirect("/clearcookies")
 }

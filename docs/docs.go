@@ -24,25 +24,57 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/product/{name}/{stock}": {
-            "get": {
-                "tags": [
-                    "Product"
+        "/product/category/add": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
-                "summary": "Get Items Info",
+                "description": "add category",
+                "tags": [
+                    "Category"
+                ],
+                "summary": "add category",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "product name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
+                        "description": "prev - cur",
+                        "name": "Cate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/product.Category"
+                        }
                     },
                     {
                         "type": "string",
-                        "description": "product stock",
-                        "name": "stock",
-                        "in": "path",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/product/category/refresh": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "remake category_map in server",
+                "tags": [
+                    "Category"
+                ],
+                "summary": "refresh category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -59,47 +91,6 @@ const docTemplate = `{
                     "Test"
                 ],
                 "summary": "Test List",
-                "responses": {}
-            }
-        },
-        "/test1": {
-            "get": {
-                "description": "Test get list",
-                "tags": [
-                    "Test"
-                ],
-                "summary": "Test List",
-                "responses": {}
-            }
-        },
-        "/user/info/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get User Info from DB",
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get User Info",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {}
             }
         },
@@ -140,6 +131,37 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/user.User"
                         }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/{id}/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get User Info from DB",
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get User Info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -186,9 +208,44 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/vender/{id}/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get vender info",
+                "tags": [
+                    "Vender"
+                ],
+                "summary": "get\tvender info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
+        "product.Category": {
+            "type": "object",
+            "properties": {
+                "current cate": {
+                    "type": "string"
+                },
+                "previous cate": {
+                    "type": "string"
+                }
+            }
+        },
         "user.User": {
             "type": "object",
             "properties": {

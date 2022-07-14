@@ -45,7 +45,7 @@ func Login(table string, c *fiber.Ctx) error {
 		Args:     login,
 		Ctx:      c,
 	}
-	sqlCMD.Rows, sqlCMD.Err = DB.Query("SELECT password FROM "+table+" WHERE id = $1", table, login.Id)
+	sqlCMD.Rows, sqlCMD.Err = DB.Query("SELECT password FROM "+table+" WHERE id = $1", login.Id)
 	_, err = DBGet(sqlCMD)
 	if err != nil {
 		return ErrorReqeustJSON(err, 500, c)
@@ -74,4 +74,16 @@ func Login(table string, c *fiber.Ctx) error {
 		Success: true,
 		Msg:     "LOGIN SUCCESS",
 	})
+}
+
+func CookiesClear(c *fiber.Ctx) error {
+	c.ClearCookie()
+	return c.Status(fiber.StatusOK).JSON(RequestJSON{
+		Success: true,
+		Msg:     "Successfully logout",
+	})
+}
+
+func Logout(c *fiber.Ctx) error {
+	return c.Redirect("/clearcookies")
 }

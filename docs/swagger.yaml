@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  product.Category:
+    properties:
+      current cate:
+        type: string
+      previous cate:
+        type: string
+    type: object
   user.User:
     properties:
       addr:
@@ -50,23 +57,42 @@ info:
   title: Fiber Example API
   version: "1.0"
 paths:
-  /product/{name}/{stock}:
-    get:
+  /product/category/add:
+    post:
+      description: add category
       parameters:
-      - description: product name
-        in: path
-        name: name
+      - description: prev - cur
+        in: body
+        name: Cate
         required: true
-        type: string
-      - description: product stock
-        in: path
-        name: stock
+        schema:
+          $ref: '#/definitions/product.Category'
+      - description: Authorization
+        in: header
+        name: Authorization
         required: true
         type: string
       responses: {}
-      summary: Get Items Info
+      security:
+      - ApiKeyAuth: []
+      summary: add category
       tags:
-      - Product
+      - Category
+  /product/category/refresh:
+    get:
+      description: remake category_map in server
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: refresh category
+      tags:
+      - Category
   /test:
     get:
       description: Test get list
@@ -76,14 +102,7 @@ paths:
       summary: Test List
       tags:
       - Test
-  /test1:
-    get:
-      description: Test get list
-      responses: {}
-      summary: Test List
-      tags:
-      - Test
-  /user/info/{id}:
+  /user/{id}/info:
     get:
       description: Get User Info from DB
       parameters:
@@ -133,6 +152,21 @@ paths:
       summary: Sign up
       tags:
       - User
+  /vender/{id}/info:
+    get:
+      description: get vender info
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: "get\tvender info"
+      tags:
+      - Vender
   /vender/login:
     post:
       description: |-

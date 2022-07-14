@@ -36,8 +36,8 @@ func GenerateToken(authclaims AuthClaims) (string, error) {
 	return signedtoken, nil
 }
 
-func VerfyJWT(token string) error {
-	_, err := jwt.ParseWithClaims(token, &AuthClaims{}, func(t *jwt.Token) (interface{}, error) {
+func VerfyJWT(token string, c *fiber.Ctx) error {
+	t, err := jwt.ParseWithClaims(token, &AuthClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("diff jwt method")
 		}
@@ -46,11 +46,14 @@ func VerfyJWT(token string) error {
 	if err != nil {
 		return err
 	}
+	if t.Claims.(*AuthClaims).Id != c.Params("id") {
+		return errors.New("diff id token")
+	}
 	return nil
 }
 
 func JWTmiddleware(c *fiber.Ctx) error {
-	err := VerfyJWT(c.GetReqHeaders()["Authorization"])
+	err := VerfyJWT(c.Cookies("Authorization"), c)
 	if err != nil {
 		return ErrorReqeustJSON(err, 403, c)
 	}

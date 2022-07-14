@@ -1,10 +1,10 @@
-package info
+package testfolder
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/yusong-offx/myshoppingmall/route"
+	"github.com/yusong-offx/myshoppingmall/utils"
 )
 
 type Tests struct {
@@ -14,9 +14,15 @@ type Tests struct {
 	Phone_number string `json:"phone_number"`
 	Email        string `json:"email"`
 }
-type IdPwd struct {
-	Id  string `json:"id"`
-	Pwd string `json:"password"`
+
+// type IdPwd struct {
+// 	Id  string `json:"id"`
+// 	Pwd string `json:"password"`
+// }
+
+func testfunc(c *fiber.Ctx) error {
+	err := utils.ErrorReqeustJSON(errors.New("Test Err"), 500, c)
+	return err
 }
 
 // @Tags         Test
@@ -25,23 +31,15 @@ type IdPwd struct {
 // @Produce      json
 // @Router       /test [get]
 func Test(c *fiber.Ctx) error {
-	fmt.Println(c.GetReqHeaders()["Authorization"])
-	fmt.Println()
-	fmt.Println(c.Cookies("Authorization"))
-	fmt.Println()
-	fmt.Println(c.GetRespHeaders())
-
-	return c.JSON(route.RequestJSON{
-		Success: false,
-		Msg:     "godd",
-	})
+	err := testfunc(c)
+	return err
 }
 
-// @Tags         Test
-// @Summary      Test List
-// @Description  Test get list
-// @Router       /test1 [get]
-func Test1(c *fiber.Ctx) error {
-	fmt.Println(c.IPs(), c.IP())
-	return c.SendString("good")
-}
+// // @Tags         Test
+// // @Summary      Test List
+// // @Description  Test get list
+// // @Router       /test1 [get]
+// func Test1(c *fiber.Ctx) error {
+// 	fmt.Println(c.IPs(), c.IP())
+// 	return c.SendString("good")
+// }
