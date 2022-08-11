@@ -81,14 +81,13 @@ func main() {
 
 	// Product
 	G_product := app.Group("/product")
-	G_product.Get("/item/:id", product.ItemGet)
 
 	G_product.Post("/category/add", product.CategoryPost)
 	G_product.Get("/category/refresh", product.CategoryRefresh)
 	G_product.Get("/category/:cate", product.CategorySearch)
 
-	// G_product.Post("/item/add", product.ItemPost)
-	// G_product.Get("/", product.ItemGet)
+	G_product.Post("/item/add", product.ItemPost)
+	G_product.Get("/item/search", product.ItemGet)
 
 	// Open server
 	log.Fatal(app.Listen("localhost:8080"))

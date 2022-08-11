@@ -10,7 +10,7 @@ import (
 var DB *sql.DB
 
 const (
-	host     = "172.30.1.60"
+	host     = "localhost"
 	port     = "5432"
 	user     = "postgres"
 	password = "Dlwpak1024!!"

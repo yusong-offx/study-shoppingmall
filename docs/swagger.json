@@ -74,6 +74,31 @@
                 "responses": {}
             }
         },
+        "/product/{name}/{stock}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Items Info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "product stock",
+                        "name": "stock",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/test": {
             "get": {
                 "description": "Test get list",

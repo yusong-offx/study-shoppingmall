@@ -57,6 +57,23 @@ info:
   title: Fiber Example API
   version: "1.0"
 paths:
+  /product/{name}/{stock}:
+    get:
+      parameters:
+      - description: product name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: product stock
+        in: path
+        name: stock
+        required: true
+        type: string
+      responses: {}
+      summary: Get Items Info
+      tags:
+      - Product
   /product/category/add:
     post:
       description: add category
